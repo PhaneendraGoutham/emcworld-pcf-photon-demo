@@ -1,6 +1,6 @@
-# GCP Next Demo Concourse Pipeline
+# EMCworld Demo Concourse Pipeline
 
-In order to run the GCP Next Demo Concourse Pipeline you must have an existing [Concourse](http://concourse.ci) environment. See [Deploying Concourse on Google Compute Engine](https://github.com/frodenas/bosh-google-cpi-boshrelease/blob/master/docs/deploy_concourse.md) for instructions.
+In order to run the GCP Next Demo Concourse Pipeline you must have an existing [Concourse](http://concourse.ci) environment. 
 
 * Target your Concourse CI environment:
 
