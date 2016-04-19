@@ -34,7 +34,6 @@ jobs:
         params:
           manifest: manifests/manifest.yml
           path: app-src/cities/cities-service/build/libs/cities-service.jar
-          current_app_name: {{dev-tenant1_application_name}}
 
   - name: deploy-to-qa-tenant1
     serial: true
@@ -53,7 +52,6 @@ jobs:
         params:
           manifest: manifests/manifest.yml
           path: app-src/cities/cities-service/build/libs/cities-service.jar
-          current_app_name: {{qa-tenant1_application_name}}
 
   - name: deploy-to-prod-tenant2
     serial: true
@@ -72,8 +70,6 @@ jobs:
         params:
           manifest: manifests/manifest.yml
           path: app-src/cities/cities-service/build/libs/cities-service.jar
-          current_app_name: {{prod-tenant2_application_name}}
-
 
 resources:
   - name: app-src
