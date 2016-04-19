@@ -6,7 +6,9 @@ source app-src/ci/tasks/utils.sh
 
 check_param application_name
 check_param num_instances
-
+echo "before printing PWD"
+echo ${PWD}
+echo "after printing PWD"
 manifests_dir="${PWD}/manifests"
 manifest_file="${manifests_dir}/manifest.yml"
 
