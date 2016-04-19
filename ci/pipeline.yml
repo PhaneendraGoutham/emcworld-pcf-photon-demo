@@ -1,0 +1,176 @@
+---
+groups:
+  - name: gcp-next-demo
+    jobs:
+      - unit-tests
+      - deploy-to-dev-tenant1
+      - deploy-to-qa-tenant1
+      - deploy-to-prod-tenant2
+      - deploy-to-integration-vsphere
+      - ship-to-production
+      - deploy-to-production-google
+
+jobs:
+  - name: unit-tests
+    public: true
+    plan:
+      - aggregate:
+        - {trigger: true, get: app-src}
+
+      - task: unit-tests
+        file: app-src/ci/tasks/unit-tests.yml
+
+  - name: deploy-to-dev-tenant1
+    serial: true
+    plan:
+      - aggregate:
+        - {trigger: true,  passed: [unit-tests], get: app-src}
+        - {trigger: false,                       get: app-version, params: {bump: patch}}
+
+      - put: app-version
+        params: {file: app-version/number}
+
+      - task: build-dev-manifest
+        file: app-src/ci/tasks/build-manifest.yml
+        config:
+          params:
+            application_name:     {{dev_ten1_application_name}}
+            application_domain:   {{dev_ten1_application_domain}}
+            application_hostname: {{dev_ten1_application_hostname}}
+            num_instances:        {{dev_ten1_num_instances}}
+            cloud:                photon
+
+      - put: pcf-dev-ten1
+        params:
+          manifest: manifests/manifest-dev-ten1.yml
+          path: app-src/9fellas/
+          current_app_name: {{vsphere_integration_application_name}}
+
+  - name: ship-to-production
+    public: true
+    plan:
+      - aggregate:
+        - {trigger: false, passed: [deploy-to-integration-vsphere], get: app-src}
+        - {trigger: false, passed: [deploy-to-integration-vsphere], get: app-version}
+
+  - name: deploy-to-production-google
+    serial: true
+    plan:
+      - aggregate:
+        - {trigger: true,  passed: [ship-to-production], get: app-src}
+        - {trigger: false, passed: [ship-to-production], get: app-version}
+
+      - task: build-google-manifest
+        file: app-src/ci/tasks/build-manifest.yml
+        config:
+          params:
+            application_name:     {{google_production_application_name}}
+            application_domain:   {{google_production_application_domain}}
+            application_hostname: {{google_production_application_hostname}}
+            num_instances:        {{google_production_num_instances}}
+            cloud:                google
+            dashboard_url:        9fellas.google.paashub.com
+            redis_service_name:   {{google_production_redis_service_name}}
+
+      - put: pcf-production-google
+        params:
+          manifest: manifests/manifest-google.yml
+          path: app-src/9fellas/
+          current_app_name: {{google_production_application_name}}
+
+resources:
+  - name: app-src
+    type: git
+    source:
+      uri: git@github.com:cf-platform-eng/google-cloud-platform-demos.git
+      branch: master
+      private_key: {{github_private_key}}
+
+  - name: app-version
+    type: semver
+    source:
+      key:               current-version
+      bucket:            {{aws_s3_bucket_name}}
+      access_key_id:     {{aws_s3_access_key}}
+      secret_access_key: {{aws_s3_secret_key}}
+      region:            {{aws_s3_region}}
+
+  - name: pcf-integration-aws
+    type: cf
+    source:
+      api: {{aws_integration_cf_api}}
+      username: {{aws_integration_cf_username}}
+      password: {{aws_integration_cf_password}}
+      organization: {{aws_integration_cf_org}}
+      space: {{aws_integration_cf_space}}
+      skip_cert_check: true
+
+  - name: pcf-production-aws
+    type: cf
+    source:
+      api: {{aws_production_cf_api}}
+      username: {{aws_production_cf_username}}
+      password: {{aws_production_cf_password}}
+      organization: {{aws_production_cf_org}}
+      space: {{aws_production_cf_space}}
+      skip_cert_check: true
+
+  - name: pcf-integration-google
+    type: cf
+    source:
+      api: {{google_integration_cf_api}}
+      username: {{google_integration_cf_username}}
+      password: {{google_integration_cf_password}}
+      organization: {{google_integration_cf_org}}
+      space: {{google_integration_cf_space}}
+      skip_cert_check: true
+
+  - name: pcf-production-google
+    type: cf
+    source:
+      api: {{google_production_cf_api}}
+      username: {{google_production_cf_username}}
+      password: {{google_production_cf_password}}
+      organization: {{google_production_cf_org}}
+      space: {{google_production_cf_space}}
+      skip_cert_check: true
+
+  - name: pcf-integration-vcloud
+    type: cf
+    source:
+      api: {{vcloud_integration_cf_api}}
+      username: {{vcloud_integration_cf_username}}
+      password: {{vcloud_integration_cf_password}}
+      organization: {{vcloud_integration_cf_org}}
+      space: {{vcloud_integration_cf_space}}
+      skip_cert_check: true
+
+  - name: pcf-production-vcloud
+    type: cf
+    source:
+      api: {{vcloud_production_cf_api}}
+      username: {{vcloud_production_cf_username}}
+      password: {{vcloud_production_cf_password}}
+      organization: {{vcloud_production_cf_org}}
+      space: {{vcloud_production_cf_space}}
+      skip_cert_check: true
+
+  - name: pcf-integration-vsphere
+    type: cf
+    source:
+      api: {{vsphere_integration_cf_api}}
+      username: {{vsphere_integration_cf_username}}
+      password: {{vsphere_integration_cf_password}}
+      organization: {{vsphere_integration_cf_org}}
+      space: {{vsphere_integration_cf_space}}
+      skip_cert_check: true
+
+  - name: pcf-production-vsphere
+    type: cf
+    source:
+      api: {{vsphere_production_cf_api}}
+      username: {{vsphere_production_cf_username}}
+      password: {{vsphere_production_cf_password}}
+      organization: {{vsphere_production_cf_org}}
+      space: {{vsphere_production_cf_space}}
+      skip_cert_check: true

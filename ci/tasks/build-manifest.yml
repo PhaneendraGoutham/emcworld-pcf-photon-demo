@@ -1,0 +1,22 @@
+---
+platform: linux
+image_resource:
+  type: docker-image
+  source:
+    repository: ubuntu
+    tag: trusty
+inputs:
+  - name: app-src
+  - name: app-version
+outputs:
+  - name: manifests
+run:
+  path: app-src/ci/tasks/build-manifest.sh
+params:
+  application_name:     replace-me
+  application_domain:   replace-me
+  application_hostname: replace-me
+  num_instances:        replace-me
+  cloud:                replace-me
+  dashboard_url:        replace-me
+  redis_service_name:   replace-me
