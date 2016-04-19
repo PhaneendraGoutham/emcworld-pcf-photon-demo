@@ -18,7 +18,7 @@ applications:
    instances: ${num_instances}
    memory: 512M
    disk_quota: 512M
-   path: {PWD}/build/libs/cities-service.jar
+   path: ${PWD}/build/libs/cities-service.jar
 
    env:
      SPRING_PROFILES_ACTIVE: cloud
