@@ -10,8 +10,6 @@ check_param num_instances
 manifests_dir="${PWD}/manifests"
 manifest_file="${manifests_dir}/manifest.yml"
 
-application_version=`cat app-version/number`
-
 echo "Creating manifest ${manifest_file}..."
 cat > ${manifest_file} <<EOF
 ---

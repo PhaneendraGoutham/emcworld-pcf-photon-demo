@@ -7,7 +7,6 @@ image_resource:
     tag: trusty
 inputs:
   - name: app-src
-  - name: app-version
 outputs:
   - name: manifests
 run:

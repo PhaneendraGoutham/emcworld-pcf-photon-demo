@@ -1,6 +1,6 @@
 ---
 groups:
-  - name: emcworld-demo
+  - name: PCF-on-Photon-Platform
     jobs:
       - unit-tests
       - deploy-to-dev-tenant1
@@ -22,10 +22,6 @@ jobs:
     plan:
       - aggregate:
         - {trigger: true,  passed: [unit-tests], get: app-src}
-        - {trigger: false,                       get: app-version, params: {bump: patch}}
-
-      - put: app-version
-        params: {file: app-version/number}
 
       - task: build-dev-manifest
         file: app-src/ci/tasks/build-manifest.yml
@@ -45,10 +41,6 @@ jobs:
     plan:
       - aggregate:
         - {trigger: true,  passed: [deploy-to-dev-tenant1], get: app-src}
-        - {trigger: false,                       get: app-version, params: {bump: patch}}
-
-      - put: app-version
-        params: {file: app-version/number}
 
       - task: build-qa-manifest
         file: app-src/ci/tasks/build-manifest.yml
@@ -68,10 +60,6 @@ jobs:
     plan:
       - aggregate:
         - {trigger: true,  passed: [deploy-to-qa-tenant1], get: app-src}
-        - {trigger: false,                       get: app-version, params: {bump: patch}}
-
-      - put: app-version
-        params: {file: app-version/number}
 
       - task: build-prod-manifest
         file: app-src/ci/tasks/build-manifest.yml
@@ -91,7 +79,7 @@ resources:
   - name: app-src
     type: git
     source:
-      uri: git@github.com:boparp-pivotal/emcworld-pcf-photon-demo.git
+      uri: https://github.com/boparp-pivotal/emcworld-pcf-photon-demo.git
       branch: master
 
   - name: app-version
