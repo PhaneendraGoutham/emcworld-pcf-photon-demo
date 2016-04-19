@@ -18,8 +18,7 @@ applications:
    instances: ${num_instances}
    memory: 512M
    disk_quota: 512M
-   path: /tmp/build/put/app-src/cities/cities-service/build/libs/cities-service.jar
-
+   buildpack: java_buildpack_offline
    env:
      SPRING_PROFILES_ACTIVE: cloud
 EOF

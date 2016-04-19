@@ -32,9 +32,8 @@ jobs:
 
       - put: pcf-dev-tenant1
         params:
-          manifest: manifests/manifest.yml
-          path: app-src/cities/cities-service
-          current_app_name: {{dev-tenant1_application_name}}
+          manifest: manifests/manifest-dev-tenant1.yml
+          path: app-src/cities/cities-service/build/libs/cities-service.jar
 
   - name: deploy-to-qa-tenant1
     serial: true
@@ -51,9 +50,8 @@ jobs:
 
       - put: pcf-qa-tenant1
         params:
-          manifest: manifests/manifest.yml
-          path: app-src/cities/cities-service
-          current_app_name: {{qa-tenant1_application_name}}
+          manifest: manifests/manifest-qa-tenant1.yml
+          path: app-src/cities/cities-service/build/libs/cities-service.jar
 
   - name: deploy-to-prod-tenant2
     serial: true
@@ -70,9 +68,8 @@ jobs:
 
       - put: pcf-qa-tenant1
         params:
-          manifest: manifests/manifest.yml
-          path: app-src/cities/cities-service
-          current_app_name: {{prod-tenant2_application_name}}
+          manifest: manifests/manifest-prod-tenant1.yml
+          path: app-src/cities/cities-service/build/libs/cities-service.jar
 
 
 resources:
