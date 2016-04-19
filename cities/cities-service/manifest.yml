@@ -1,0 +1,10 @@
+# cf manifest for cities-service
+applications:
+- name: pb-cities-service
+  memory: 512M
+  instances: 1
+  host: pb-cities-service
+  path: ./build/libs/cities-service-0.0.1-SNAPSHOT.jar
+
+env:
+  SPRING_PROFILES_ACTIVE: cloud

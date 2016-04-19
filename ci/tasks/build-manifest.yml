@@ -15,4 +15,3 @@ run:
 params:
   application_name:     replace-me
   num_instances:        replace-me
-  SPRING_PROFILES_ACTIVE:                replace-me
