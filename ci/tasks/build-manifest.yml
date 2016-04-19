@@ -14,9 +14,5 @@ run:
   path: app-src/ci/tasks/build-manifest.sh
 params:
   application_name:     replace-me
-  application_domain:   replace-me
-  application_hostname: replace-me
   num_instances:        replace-me
-  cloud:                replace-me
-  dashboard_url:        replace-me
-  redis_service_name:   replace-me
+  SPRING_PROFILES_ACTIVE:                replace-me
