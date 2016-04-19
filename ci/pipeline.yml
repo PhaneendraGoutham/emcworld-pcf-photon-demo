@@ -44,7 +44,7 @@ jobs:
     serial: true
     plan:
       - aggregate:
-        - {trigger: true,  passed: [unit-tests], get: app-src}
+        - {trigger: true,  passed: [deploy-to-dev-tenant1], get: app-src}
         - {trigger: false,                       get: app-version, params: {bump: patch}}
 
       - put: app-version
@@ -67,7 +67,7 @@ jobs:
     serial: true
     plan:
       - aggregate:
-        - {trigger: true,  passed: [unit-tests], get: app-src}
+        - {trigger: true,  passed: [deploy-to-qa-tenant1], get: app-src}
         - {trigger: false,                       get: app-version, params: {bump: patch}}
 
       - put: app-version
