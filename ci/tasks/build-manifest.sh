@@ -6,7 +6,7 @@ source app-src/ci/tasks/utils.sh
 
 check_param application_name
 check_param num_instances
-manifests_dir="/tmp/build/put/manifests"
+manifests_dir="${PWD}/manifests"
 manifest_file="${manifests_dir}/manifest.yml"
 
 echo "Creating manifest ${manifest_file}..."
