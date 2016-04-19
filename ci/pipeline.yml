@@ -1,6 +1,6 @@
 ---
 groups:
-  - name: gcp-next-demo
+  - name: emcworld-demo
     jobs:
       - unit-tests
       - deploy-to-dev-tenant1
@@ -80,7 +80,7 @@ jobs:
         config:
           params:
             application_name:     {{prod-tenant2_application_name}}
-            num_instances:        {{qa_tenant1_num_instances}}
+            num_instances:        {{prod-tenant2_num_instances}}
             SPRING_PROFILES_ACTIVE:                cloud
 
       - put: pcf-qa-tenant1
