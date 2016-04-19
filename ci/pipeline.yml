@@ -33,7 +33,6 @@ jobs:
           params:
             application_name:     {{dev-tenant1_application_name}}
             num_instances:        {{dev-tenant1_num_instances}}
-            SPRING_PROFILES_ACTIVE:                cloud
 
       - put: pcf-dev-tenant1
         params:
@@ -57,7 +56,6 @@ jobs:
           params:
             application_name:     {{qa-tenant1_application_name}}
             num_instances:        {{qa-tenant1_num_instances}}
-            SPRING_PROFILES_ACTIVE:                cloud
 
       - put: pcf-qa-tenant1
         params:
@@ -81,7 +79,6 @@ jobs:
           params:
             application_name:     {{prod-tenant2_application_name}}
             num_instances:        {{prod-tenant2_num_instances}}
-            SPRING_PROFILES_ACTIVE:                cloud
 
       - put: pcf-qa-tenant1
         params:
