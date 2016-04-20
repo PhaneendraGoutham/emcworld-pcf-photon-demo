@@ -1,6 +1,6 @@
 ---
 groups:
-  - name: PCF-on-Photon-Platform
+  - name: PCF on Photon Platform
     jobs:
       - unit-tests
       - deploy-to-dev-tenant1
