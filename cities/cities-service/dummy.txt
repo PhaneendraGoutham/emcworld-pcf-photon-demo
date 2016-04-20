@@ -1,2 +1,17 @@
-dummy file to trigger Concourse pipeline
-add a new line
+Kubernetes:
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: tomcat
+  name: tomcat
+  namespace: default
+spec:
+  type: "LoadBalancer"
+  ports:
+  - port: 10080
+    targetPort: 10080
+    protocol: "TCP"
+    nodePort: 30001
+  selector:
+    name: tomcat-server
