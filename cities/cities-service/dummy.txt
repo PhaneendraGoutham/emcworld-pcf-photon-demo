@@ -1,5 +1,5 @@
 Kubernetes:
-apiVersion: v1
+apiVersion: v
 kind: Service
 metadata:
   labels:
