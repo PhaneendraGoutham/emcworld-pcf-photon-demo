@@ -14,7 +14,7 @@ jobs:
       - aggregate:
         - {trigger: true, get: app-src}
 
-      - task: build-and-unit-tests
+      - task: unit-tests
         file: app-src/ci/tasks/unit-tests.yml
 
   - name: deploy-to-dev-tenant1
