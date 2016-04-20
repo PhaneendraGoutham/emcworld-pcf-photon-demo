@@ -2,26 +2,26 @@
 groups:
   - name: PCF on Photon Platform
     jobs:
-      - unit-tests
+      - build-and-unit-tests
       - deploy-to-dev-tenant1
       - deploy-to-qa-tenant1
       - deploy-to-prod-tenant2
 
 jobs:
-  - name: unit-tests
+  - name: build-and-unit-tests
     public: true
     plan:
       - aggregate:
         - {trigger: true, get: app-src}
 
-      - task: unit-tests
+      - task: build-and-unit-tests
         file: app-src/ci/tasks/unit-tests.yml
 
   - name: deploy-to-dev-tenant1
     serial: true
     plan:
       - aggregate:
-        - {trigger: true,  passed: [unit-tests], get: app-src}
+        - {trigger: true,  passed: [build-and-unit-tests], get: app-src}
 
       - task: build-dev-manifest
         file: app-src/ci/tasks/build-manifest.yml
