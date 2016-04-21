@@ -1,0 +1,156 @@
+---
+name: concourse
+director_uuid: 4e199959-ef3e-4c0d-bcbb-175608a6a301
+
+releases:
+  - name: concourse
+    version: "0.74.0"
+  - name: garden-linux
+    version: "0.333.0"
+
+compilation:
+  reuse_compilation_vms: true
+  workers: 4
+  network: default
+  cloud_properties:
+    vm_flavor: core-200
+    disk_flavor: core-200
+    vm_attached_disk_size_gb: 40
+
+update:
+  canaries: 0
+  canary_watch_time: 1000-60000
+  update_watch_time: 1000-60000
+  max_in_flight: 32
+  serial: false
+
+networks:
+- name: default
+  subnets:
+  - range: 10.115.72.0/22
+    gateway: 10.115.75.253
+    dns:
+    - 10.115.73.10
+    static:
+    - 10.115.73.65
+    - 10.115.73.66
+    reserved:
+    - 10.115.73.2-10.115.73.64
+    - 10.115.73.73-10.115.73.127
+    - 10.115.72.1-10.115.72.255
+    cloud_properties:
+      name: Photon_PCF
+
+resource_pools:
+  - name: default
+    stemcell:
+      name: bosh-vsphere-esxi-ubuntu-trusty-go_agent
+      version: '3177'
+    network: default
+    cloud_properties:
+      vm_flavor: core-200
+      disk_flavor: core-200
+      vm_attached_disk_size_gb: 20
+
+
+disk_pools:
+  - name: db
+    disk_size: 10240
+    cloud_properties:
+      disk_flavor: core-200
+
+jobs:
+  - name: db
+    templates:
+      - name: postgresql
+        release: concourse
+      - name: consul-agent
+        release: concourse
+    instances: 1
+    resource_pool: default
+    persistent_disk_pool: db
+    networks:
+      - name: default
+        default: [dns, gateway]
+        static_ips:
+        - 10.115.73.65
+    properties:
+      consul:
+        agent:
+          mode: server
+          services:
+            postgresql: {}
+
+  - name: web
+    templates:
+      - name: atc
+        release: concourse
+      - name: tsa
+        release: concourse
+      - name: consul-agent
+        release: concourse
+    instances: 1
+    resource_pool: default
+    networks:
+      - name: default
+        default: [dns, gateway]
+        static_ips:
+        - 10.115.73.66
+    properties:
+      consul:
+        agent:
+          services:
+            atc: {}
+            tsa: {}
+
+  - name: worker
+    templates:
+      - name: groundcrew
+        release: concourse
+      - name: baggageclaim
+        release: concourse
+      - name: garden
+        release: garden-linux
+      - name: consul-agent
+        release: concourse
+    instances: 1
+    resource_pool: default
+    networks:
+      - name: default
+        default: [dns, gateway]
+    properties:
+      consul:
+        agent:
+          services:
+            garden: {}
+
+properties:
+  postgresql:
+    databases:
+      - name: &atc_db_name atc
+    roles:
+      - name: &atc_db_username atc
+        password: &atc_db_password "vmware"
+
+  consul:
+    agent:
+      servers:
+        lan:
+          - 10.115.73.65
+
+  atc:
+    external_url: http://10.115.73.66
+    publicly_viewable: true
+    development_mode: true
+    basic_auth_username: "photon"
+    basic_auth_password: "vmware"
+    postgresql:
+      address: 10.115.73.65
+      database: *atc_db_name
+      role:
+        name: *atc_db_username
+        password: *atc_db_password
+
+  garden:
+    listen_network: tcp
+    listen_address: 0.0.0.0:7777
