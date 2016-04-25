@@ -1,11 +1,13 @@
 # EMCworld Demo Concourse Pipeline
 
-In order to run the GCP Next Demo Concourse Pipeline you must have an existing [Concourse](http://concourse.ci) environment. 
+In order to run the EMC World Demo Concourse Pipeline you must have an existing [Concourse](http://concourse.ci) environment. 
+
+EMC World Concourse URL: http://10.115.73.66:8080/ 
 
 * Target your Concourse CI environment:
 
 ```
-fly -t google login -c <YOUR CONCOURSE URL>
+fly -t photon login -c <YOUR CONCOURSE URL>
 ```
 
 * Update the [credentials.yml](https://github.com/cf-platform-eng/google-cloud-platform-demos/blob/master/ci/credentials.yml) file.
@@ -13,11 +15,11 @@ fly -t google login -c <YOUR CONCOURSE URL>
 * Set the GCP Next Demo Concourse Pipeline:
 
 ```
-fly -t google set-pipeline -p gcp-next-demo -c pipeline.yml -l credentials.yml
+fly -t photon set-pipeline -p emcworld-demo -c ci/pipeline.yml -l ci/credentials.yml
 ```
 
 * Unpause the GCP Next Demo Concourse Pipeline:
 
 ```
-fly -t google unpause-pipeline -p gcp-next-demo
+fly -t photon unpause-pipeline -p emcworld-demo
 ```
